@@ -1,0 +1,12 @@
+# Client VM - /etc/netplan/01-netcfg.yaml
+# Net1 (internal client network). Default gateway is the Gateway VM's client-side interface.
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    enp0s1:
+      dhcp4: no
+      addresses: [192.168.0.10/24]
+      gateway4: 192.168.0.100
+      nameservers:
+        addresses: [8.8.8.8, 8.8.4.4]

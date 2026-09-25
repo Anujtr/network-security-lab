@@ -1,0 +1,20 @@
+# Gateway VM - /etc/netplan/01-netcfg.yaml
+# Three interfaces: client-facing (Net1), server-facing (Net2), and NAT/internet (Net3, DHCP).
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    enp0s2:                       # Net1 - client-facing
+      dhcp4: no
+      addresses: [192.168.0.100/24]
+      nameservers:
+        addresses: [8.8.8.8, 8.8.4.4]
+    enp0s3:                       # Net2 - server-facing
+      dhcp4: no
+      addresses: [10.0.0.100/8]
+      nameservers:
+        addresses: [8.8.8.8, 8.8.4.4]
+    enp0s1:                       # Net3 - NAT / internet access
+      dhcp4: yes
+      nameservers:
+        addresses: [8.8.8.8, 8.8.4.4]

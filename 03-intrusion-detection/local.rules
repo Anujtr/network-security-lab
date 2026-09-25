@@ -1,0 +1,30 @@
+# Network Security Lab - Stage 3: Snort custom detection rules
+# File location on gateway: /etc/snort/rules/local.rules
+# Local custom rules use SIDs above 10,000,000.
+
+# Task 4.1 - Land Attack (identical source/destination IP:port, SYN set)
+alert tcp 10.0.0.10 80 -> 10.0.0.10 80 (msg:"LAND ATTACK DETECTED - Same Source and Destination"; flags:S; sid:10000001; rev:1;)
+
+# Task 4.2 - SYN Flood (threshold to avoid alert flooding)
+alert tcp any any -> $HOME_NET any (msg:"SYN FLOOD ATTACK DETECTED"; flags:S; threshold: type both, track by_dst, count 20, seconds 60; sid:10000002; rev:1;)
+
+# Task 4.3 - Smurf Attack (ICMP echo request to broadcast address)
+alert icmp any any -> 192.168.0.255 any (msg:"SMURF ATTACK DETECTED - ICMP to Broadcast"; itype:8; sid:10000003; rev:1;)
+
+# Task 4.4 - UDP Flood (threshold-based)
+alert udp any any -> $HOME_NET any (msg:"UDP FLOOD ATTACK DETECTED"; threshold: type both, track by_dst, count 10, seconds 60; sid:10000004; rev:1;)
+
+# Task 4.5a - TCP ACK Scan
+alert tcp any any -> $HOME_NET any (msg:"PORT SCAN - TCP ACK SCAN DETECTED"; flags:A; threshold: type both, track by_src, count 20, seconds 60; sid:10000005; rev:1;)
+
+# Task 4.5b - TCP FIN Scan
+alert tcp any any -> $HOME_NET any (msg:"PORT SCAN - TCP FIN SCAN DETECTED"; flags:F; threshold: type both, track by_src, count 20, seconds 60; sid:10000006; rev:1;)
+
+# Task 4.5c - TCP Xmas Scan (FIN, PSH, URG flags set)
+alert tcp any any -> $HOME_NET any (msg:"PORT SCAN - TCP XMAS SCAN DETECTED"; flags:FPU; threshold: type both, track by_src, count 20, seconds 60; sid:10000007; rev:1;)
+
+# Task 4.5d - TCP Null Scan (no flags set)
+alert tcp any any -> $HOME_NET any (msg:"PORT SCAN - TCP NULL SCAN DETECTED"; flags:0; threshold: type both, track by_src, count 20, seconds 60; sid:10000008; rev:1;)
+
+# Task 4.5e - UDP Port Scan
+alert udp any any -> $HOME_NET any (msg:"PORT SCAN - UDP SCAN DETECTED"; threshold: type both, track by_src, count 20, seconds 60; sid:10000009; rev:1;)
